@@ -206,6 +206,8 @@ int bspatch_main(int argc,char ** argv)
 		err(1, "fclose(%s)", argv[3]);
 
 	/* Write the new file */
+
+    //fd = open(argv2,O_CREAT|O_TRUNC|O_WRONLY,0666);
 	if(((fd=open(argv[2],O_CREAT|O_TRUNC|O_WRONLY,0666))<0) ||
 		(write(fd,new,newsize)!=newsize) || (close(fd)==-1))
 		err(1,"%s",argv[2]);
@@ -247,12 +249,12 @@ Java_com_example_meitu_patchutilsdemo_BsPatchJNI_patch(JNIEnv *env, jclass type,
 	argv[2] = newApkPath;
 	argv[3] = patchPath;
 
-	//int ret = bspatch_main(argc, argv);
+	int ret = bspatch_main(argc, argv);
     //int ret = test(4,argv);
 	(*env)->ReleaseStringUTFChars(env, oldApkPath_, oldApkPath);
 	(*env)->ReleaseStringUTFChars(env, newApkPath_, newApkPath);
 	(*env)->ReleaseStringUTFChars(env, patchPath_, patchPath);
 
-	//return ret;
-	return 1;
+	return ret;
+	//return 1;
 }

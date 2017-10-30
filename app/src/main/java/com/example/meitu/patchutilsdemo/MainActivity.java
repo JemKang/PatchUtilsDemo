@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 
@@ -26,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
         TextView tv = (TextView) findViewById(R.id.sample_text);
         button = (Button)findViewById(R.id.button);
         tv.setText("hello");
+        button.setText("合成新的apk");
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -43,21 +45,25 @@ public class MainActivity extends AppCompatActivity {
         //pu.genPatch(getApkPath(this),deskApk.getAbsolutePath(),patch.getAbsolutePath());//合成deskApk
         final File oldApk = new File(Environment.getExternalStorageDirectory(),"app_1.0.apk");//旧的apk
         if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
-            File sdCardDir = Environment.getExternalStorageDirectory();
+            //File sdCardDir = Environment.getExternalStorageDirectory();
             if(deskApk.exists()){
                 Log.d("kang","deskapk已经存在");
                 return;
             }
+            long time1 = 0,time2 = 0;
             //判断旧包和差分包是否存在
             if(patch.exists() && oldApk.exists()){
                 Log.d("kang","正在合成...");
                 //pu.genPatch(oldApk.getAbsolutePath(),deskApk.getAbsolutePath(),patch.getAbsolutePath());//合成deskApk
+                //time1 = System.currentTimeMillis();
                 int ret = BsPatchJNI.patch(oldApk.getAbsolutePath(),deskApk.getAbsolutePath(),patch.getAbsolutePath());
+                //time2 = System.currentTimeMillis();
                 Log.d("kang",Integer.toString(ret));
             }
             //生成新包
             if(deskApk.exists()){
                 //安装
+                Toast.makeText(this,"合成apk 用时:"+(time2-time1)+"ms",Toast.LENGTH_LONG).show();
                 Log.d("kang","successed");
             }else{
                 Log.d("kang","failed");
